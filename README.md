@@ -1,4 +1,3 @@
----
 # URL Shortener API
 
 A professional-grade URL Shortener API built with **PHP-Slim 4** and **Doctrine ORM**, following **SOLID** design principles and Clean Architecture.
