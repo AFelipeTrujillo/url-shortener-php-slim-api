@@ -5,6 +5,8 @@ use DI\ContainerBuilder;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\DBAL\DriverManager;
+use App\Domain\Service\CodeGeneratorInterface;
+use App\Shared\Base62Generator;
 
 $containerBuilder = new ContainerBuilder();
 $containerBuilder->addDefinitions([
@@ -23,6 +25,7 @@ $containerBuilder->addDefinitions([
         return new EntityManager($connection, $config);
     },
     UrlRepositoryInterface::class => \DI\autowire(\App\Infrastructure\Persistence\DoctrineUrlRepository::class),
+    CodeGeneratorInterface::class => \DI\autowire(Base62Generator::class),
 ]);
 
 return $containerBuilder->build();
