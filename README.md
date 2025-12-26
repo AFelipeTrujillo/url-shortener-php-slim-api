@@ -1,18 +1,16 @@
-This is a professional **README.md** tailored for your project. It reflects the SOLID architecture, the tech stack, and the installation steps we have covered so far.
-
 ---
-
 # URL Shortener API
 
-A high-performance, professional-grade URL Shortener API built with **PHP-Slim 4** and **Doctrine ORM**, following **SOLID** design principles and **Clean Architecture**.
+A professional-grade URL Shortener API built with **PHP-Slim 4** and **Doctrine ORM**, following **SOLID** design principles and Clean Architecture.
 
 ## 🚀 Features
 
-* **Clean Architecture:** Separated into Domain, Application, and Infrastructure layers.
-* **SOLID Principles:** High maintainability and low coupling.
-* **Modern PHP:** Built with PHP 8+ using attributes for Doctrine mapping.
-* **Dependency Injection:** Fully managed by PHP-DI.
-* **SQLite Ready:** Easy to set up and develop locally.
+* **Clean Architecture:** Clearly defined Domain, Application, and Infrastructure layers.
+* **SOLID Principles:** High maintainability, loose coupling, and testability.
+* **Idempotency:** Generates the same short code for a previously shortened URL.
+* **Automatic Redirects:** Resolves short codes back to their original destination.
+* **Visit Tracking:** Basic counter for short link usage.
+* **In-Memory Testing:** Automated tests using an isolated SQLite database in RAM.
 
 ---
 
@@ -21,8 +19,8 @@ A high-performance, professional-grade URL Shortener API built with **PHP-Slim 4
 * **Framework:** [Slim 4](https://www.slimframework.com/)
 * **ORM:** [Doctrine ORM](https://www.doctrine-project.org/)
 * **DI Container:** [PHP-DI](https://php-di.org/)
-* **Database:** SQLite (default for development)
-* **Package Manager:** Composer
+* **Database:** SQLite
+* **Testing:** [PHPUnit](https://phpunit.de/)
 
 ---
 
@@ -30,14 +28,15 @@ A high-performance, professional-grade URL Shortener API built with **PHP-Slim 4
 
 ```text
 ├── bin/                # Console scripts (Doctrine CLI)
-├── config/             # Configuration and Dependency Injection
-├── public/             # Web server entry point (index.php)
+├── config/             # Dependency Injection & DB Configuration
+├── public/             # Entry point (index.php)
 ├── src/
-│   ├── Application/    # Actions (Controllers) and Business Services
-│   ├── Domain/         # Entities and Repository Interfaces
-│   └── Infrastructure/ # Database persistence implementations
-├── var/                # Storage for SQLite database and logs
-└── composer.json       # Project dependencies and PSR-4 autoloading
+│   ├── Application/    # Actions (Controllers) and Business Logic
+│   ├── Domain/         # Entities, Repository Interfaces, and Generators
+│   ├── Infrastructure/ # Concrete persistence (Doctrine)
+│   └── Shared/         # Utilities (Base62 generator)
+├── tests/              # Unit and Integration test suites
+└── var/                # Local storage for SQLite files
 
 ```
 
@@ -45,31 +44,26 @@ A high-performance, professional-grade URL Shortener API built with **PHP-Slim 4
 
 ## ⚙️ Installation & Setup
 
-### 1. Clone the repository
+### 1. Clone & Install
 
 ```bash
 git clone <your-repository-url>
 cd url-shortener-php-slim-api
-
-```
-
-### 2. Install dependencies
-
-```bash
 composer install
 
 ```
 
-### 3. Initialize the Database
+### 2. Initialize Database
 
-Ensure the `var/` directory is writable, then run the Doctrine tool to create the SQLite database and tables:
+Create the directory for SQLite and let Doctrine generate the tables:
 
 ```bash
+mkdir var && chmod 777 var
 php bin/console.php orm:schema-tool:create
 
 ```
 
-### 4. Run the development server
+### 3. Run Development Server
 
 ```bash
 php -S localhost:8080 -t public
@@ -78,52 +72,57 @@ php -S localhost:8080 -t public
 
 ---
 
-## 🧪 Testing
+## 📡 API Usage
 
-The project uses **PHPUnit** for testing.
+### Shorten a URL
 
-### Run all tests
-```bash
-./vendor/bin/phpunit
+* **URL:** `/shorten`
+* **Method:** `POST`
+* **Payload:** `{"url": "https://www.google.com"}`
+* **Response (201):**
+```json
+{
+  "short_url": "http://localhost:8080/aB123c",
+  "original_url": "https://www.google.com"
+}
+
 ```
 
-## 📡 API Endpoints
+
+
+### Redirect
+
+* **URL:** `/{code}`
+* **Method:** `GET`
+* **Description:** Redirects to the original URL and increments the visit counter.
 
 ### Health Check
 
 * **URL:** `/ping`
 * **Method:** `GET`
-* **Description:** Verifies the API is running and the database connection is active.
-* **Response:**
-```json
-{
-  "status": "ok",
-  "database": "connected",
-  "timestamp": 1703600000
-}
+* **Description:** Checks API and database status.
+
+---
+
+## 🧪 Testing
+
+The project uses a high-speed **SQLite in-memory** setup for integration tests.
+
+Run all tests:
+
+```bash
+./vendor/bin/phpunit
 
 ```
 
-### Shorten URL (Upcoming)
+---
 
-* **URL:** `/shorten`
-* **Method:** `POST`
-* **Body:** `{ "url": "https://example.com" }`
+## 🛡️ SOLID Implementation Highlights
+
+* **S (Single Responsibility):** The `ShortenerService` only manages the business logic of shortening, while `Base62Generator` only handles code generation.
+* **D (Dependency Inversion):** High-level services depend on `UrlRepositoryInterface`, not on the concrete `DoctrineUrlRepository`.
+* **L (Liskov Substitution):** You can swap the SQLite persistence with Redis or MySQL by simply changing the implementation in the DI container.
 
 ---
 
-## 🛡️ SOLID Principles Applied
-
-* **Single Responsibility (S):** Actions only handle HTTP, Services handle logic, Entities handle data.
-* **Dependency Inversion (D):** The Application layer depends on Repository Interfaces, not concrete Doctrine implementations.
-* **Interface Segregation (I):** Specialized interfaces for domain-specific persistence.
-
----
-
-## 📄 License
-
-This project is open-source and available under the MIT License.
-
----
-
-**Would you like me to add a "Testing" section or perhaps the "How to Use" instructions for the URL shortening logic we are about to build?**
+**¿Te gustaría que ahora agreguemos un manejador de errores global para que, si algo falla, la API siempre responda con un JSON limpio en lugar de un error de PHP?**
