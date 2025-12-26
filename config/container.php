@@ -1,5 +1,6 @@
 <?php
 
+use App\Domain\Repository\UrlRepositoryInterface;
 use DI\ContainerBuilder;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
@@ -21,6 +22,7 @@ $containerBuilder->addDefinitions([
 
         return new EntityManager($connection, $config);
     },
+    UrlRepositoryInterface::class => \DI\autowire(\App\Infrastructure\Persistence\DoctrineUrlRepository::class),
 ]);
 
 return $containerBuilder->build();
