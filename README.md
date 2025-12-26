@@ -121,7 +121,3 @@ Run all tests:
 * **S (Single Responsibility):** The `ShortenerService` only manages the business logic of shortening, while `Base62Generator` only handles code generation.
 * **D (Dependency Inversion):** High-level services depend on `UrlRepositoryInterface`, not on the concrete `DoctrineUrlRepository`.
 * **L (Liskov Substitution):** You can swap the SQLite persistence with Redis or MySQL by simply changing the implementation in the DI container.
-
----
-
-**¿Te gustaría que ahora agreguemos un manejador de errores global para que, si algo falla, la API siempre responda con un JSON limpio en lugar de un error de PHP?**
