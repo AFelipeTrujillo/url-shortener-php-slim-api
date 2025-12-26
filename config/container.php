@@ -13,9 +13,10 @@ $containerBuilder->addDefinitions([
             true,
         );
 
+        // Database connection configuration
         $connection = DriverManager::getConnection([
             'driver' => 'pdo_sqlite',
-            'path'   => __DIR__ . '/../var/url_shortener.sqlite', // El archivo se creará aquí
+            'path'   => __DIR__ . '/../var/url_shortener.sqlite',
         ], $config);
 
         return new EntityManager($connection, $config);
