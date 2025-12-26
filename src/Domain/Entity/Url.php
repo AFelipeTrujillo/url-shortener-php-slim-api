@@ -14,7 +14,7 @@ class Url {
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 10, unique: true)]
+    #[ORM\Column(type: 'string', length: 2048, unique: true)]
     private string $originalUrl;
 
     #[ORM\Column(type: 'string', length: 10, unique: true)]
