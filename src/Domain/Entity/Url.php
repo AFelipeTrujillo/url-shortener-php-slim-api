@@ -20,7 +20,7 @@ class Url {
     #[ORM\Column(type: 'string', length: 10, unique: true)]
     private string $shortCode;
 
-    #[ORM\Column(type: 'string', length: 255, unique: true)]
+    #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: 'integer')]
