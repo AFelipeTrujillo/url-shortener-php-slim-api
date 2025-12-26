@@ -78,6 +78,15 @@ php -S localhost:8080 -t public
 
 ---
 
+## 🧪 Testing
+
+The project uses **PHPUnit** for testing.
+
+### Run all tests
+```bash
+./vendor/bin/phpunit
+```
+
 ## 📡 API Endpoints
 
 ### Health Check
@@ -94,8 +103,6 @@ php -S localhost:8080 -t public
 }
 
 ```
-
-
 
 ### Shorten URL (Upcoming)
 
