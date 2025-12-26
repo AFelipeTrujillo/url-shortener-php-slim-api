@@ -1,6 +1,7 @@
 <?php
 
-namespace Application\Services;
+namespace App\Application\Services;
+
 use Doctrine\ORM\EntityManager;
 
 class PingService
